@@ -123,4 +123,28 @@ study_df =
   separate(path, into = c("group", "subjectID"), sep = "_") 
 ```
 
+Using pivot_longer so that we can have week number and observations as separate columns
+
+```{r}
+study_df=
+  study_df %>% 
+  pivot_longer(
+    week_1:week_8,
+    names_to = "Week", 
+    names_prefix = "week_", 
+    values_to = "Observations"
+  ) %>%
+  mutate(
+    group = str_replace(group, "con", "Control"),
+    group = str_replace(group, "exp", "Experimental")
+  ) %>%
+  relocate(subjectID) %>%
+  mutate(
+    week = as.numeric(Week)
+  )
+
+study_df
+```
+
+
 
