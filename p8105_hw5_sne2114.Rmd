@@ -126,7 +126,7 @@ study_df =
 Using pivot_longer so that we can have week number and observations as separate columns
 
 ```{r}
-study_df=
+study_df =
   study_df %>% 
   pivot_longer(
     week_1:week_8,
@@ -146,5 +146,19 @@ study_df=
 study_df
 ```
 
+Spaghetti plot for observations on each subject over time.
 
+```{r}
+study_df %>% 
+  ggplot(aes(x = Week, y = Observations, color = group)) +
+  geom_path(aes(group = subjectID)) +
+  geom_point() +
+  labs(
+      title = "Observations for each Subject Over Time",
+      x = "Week",
+      y = "Observations",
+      color = "Arm: ")
+```
 
+The experimental group has higher values for observations overall compared to the control group.
+Also, the values for observations seems to increase over time for the experimental group compared to the control.
