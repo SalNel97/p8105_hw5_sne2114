@@ -1,6 +1,9 @@
 ---
 title: "Homework 5"
+author: "Salah El-Sadek (sne2114)"
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include = FALSE}
@@ -22,11 +25,19 @@ scale_fill_discrete = scale_fill_viridis_d
 
 ## Problem 1
 
-Read in the data.
+```{r}
+homicide_data = read_csv("./homicide-data.csv")
+```
 
+
+This is data on over 50,000 homicides across 50 large cities in the U.S. collected by the Washington Post.
+There are `r nrow(homicide_data)` rows and `r ncol(homicide_data)` columns overall.\
+Variables in the data include: ***`r names(homicide_data)`***
+
+Next, we create a city_state variable using data on city and state.
 ```{r}
 homicide_df = 
-  read_csv("./homicide-data.csv") %>% 
+  homicide_data %>% 
   mutate(
     city_state = str_c(city, state, sep = "_"),
     resolved = case_when(
@@ -37,10 +48,11 @@ homicide_df =
   ) %>% 
   select(city_state, resolved) %>% 
   filter(city_state != "Tulsa_AL")
+
+homicide_df
 ```
 
-
-Let's look at this a bit
+Here we obtain the total number of homicides and total number of unsolved homicides (no arrest made).
 
 ```{r}
 aggregate_df = 
@@ -50,18 +62,21 @@ aggregate_df =
     hom_total = n(),
     hom_unsolved = sum(resolved == "unsolved")
   )
+
+aggregate_df
 ```
 
-Can I do a prop test for a single city?
+Using prop.test to estimate proportion of homicides that went unsolved in Baltimore, MD.
 
 ```{r}
 prop.test(
   aggregate_df %>% filter(city_state == "Baltimore_MD") %>% pull(hom_unsolved), 
   aggregate_df %>% filter(city_state == "Baltimore_MD") %>% pull(hom_total)) %>% 
-  broom::tidy()
+  broom::tidy() %>% 
+  select(estimate, conf.low, conf.high)
 ```
 
-Try to iterate ........
+Iterating the prop.test for all cities.
 
 ```{r}
 results_df = 
@@ -73,9 +88,11 @@ results_df =
   select(-prop_tests) %>% 
   unnest(tidy_tests) %>% 
   select(city_state, estimate, conf.low, conf.high)
+
+results_df
 ```
 
-
+Plotting the proportion of unsolved homicides with error bars for each city.
 
 ```{r}
 results_df %>% 
@@ -88,29 +105,25 @@ results_df %>%
 
 
 
-```{r, error = TRUE}
-city_prop_test = function(df) {
-  
-  n_unsovled ...
-  n_total ... 
-  
-  prop.test(.....)
-  
-}
-homicide_df = 
-  read_csv("data/homicide-data.csv") %>% 
-  mutate(
-    city_state = str_c(city, state, sep = "_"),
-    resolved = case_when(
-      disposition == "Closed without arrest" ~ "unsolved",
-      disposition == "Open/No arrest"        ~ "unsolved",
-      disposition == "Closed by arrest"      ~ "solved",
-    )
-  ) %>% 
-  select(city_state, resolved) %>% 
-  filter(city_state != "Tulsa_AL") %>% 
-  nest(data = resolved)
-```
 
 
+<!-- ## Problem 2 ideas ... -->
+
+
+<!-- import one dataset  -->
+
+<!-- ```{r} -->
+<!-- data_1 = read_csv("lda_data/con_01.csv") -->
+<!-- ``` -->
+
+<!-- ```{r, error = TRUE} -->
+<!-- path_df =  -->
+<!--   tibble( -->
+<!--     path = list.files("lda_data"), -->
+<!--   ) %>%  -->
+<!--   mutate( -->
+<!--     path = str_c("lda_data/", path), -->
+<!--     data = map(.............)) -->
+<!-- read_csv(path_df$path[[1]]) -->
+<!-- ``` -->
 
