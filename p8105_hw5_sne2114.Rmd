@@ -8,6 +8,7 @@ editor_options:
 
 ```{r setup, include = FALSE}
 library(tidyverse)
+library(rvest)
 knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = .6,
@@ -104,26 +105,22 @@ results_df %>%
 ```
 
 
+## Problem 2
 
+Loading the data and merging each spreadsheet into a list while preserving the file names containing ID and study group status.
 
+```{r}
+study_df = 
+  tibble(
+    path = list.files("data")) %>% 
+  mutate(
+    path = str_c("data/", path),
+    data = map(path, read_csv)
+    ) %>%
+  unnest(data) %>%
+  mutate(path = str_replace(path, "data/", " "),
+         path = str_replace(path, ".csv", " ")) %>%
+  separate(path, into = c("group", "subjectID"), sep = "_") 
+```
 
-<!-- ## Problem 2 ideas ... -->
-
-
-<!-- import one dataset  -->
-
-<!-- ```{r} -->
-<!-- data_1 = read_csv("lda_data/con_01.csv") -->
-<!-- ``` -->
-
-<!-- ```{r, error = TRUE} -->
-<!-- path_df =  -->
-<!--   tibble( -->
-<!--     path = list.files("lda_data"), -->
-<!--   ) %>%  -->
-<!--   mutate( -->
-<!--     path = str_c("lda_data/", path), -->
-<!--     data = map(.............)) -->
-<!-- read_csv(path_df$path[[1]]) -->
-<!-- ``` -->
 
