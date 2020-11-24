@@ -205,6 +205,7 @@ multi_means
 ```
 
 Plotting the proportion of times a false null hypothesis was rejected (power) versus effect size.
+We filtered based on p-value < 0.05 because that's the significance level at which we could reject the null hypothesis.
 We can see that effect size is positively correlated with power. 
 We begin reaching the max power of 1 starting with an effect size of 4.
 
@@ -225,7 +226,7 @@ multi_means %>%
   )
 ```
 
-plot
+Plotting the average estimate of means against the true mean values for all samples (whether they rejected the null or not).
 
 ```{r}
 all_samples_p = 
@@ -242,5 +243,25 @@ all_samples_p =
   stat_summary(fun = "mean")
 
 all_samples_p
+```
+
+Plotting the average estimate of means against the true mean values only for samples in which the null hypothesis was rejected (p-value < 0.05).
+
+```{r}
+rej_samples_p = 
+  multi_means %>%
+   mutate(
+    multi_mu = str_c(" ", multi_mu)) %>%
+  filter(p.value < 0.05) %>%
+  ggplot(aes(x = multi_mu, y = estimate, fill = multi_mu)) +
+  geom_violin(alpha = .5) +
+  labs(
+    title = "Samples for which Null was Rejected",
+    x = "True Value of Mean",
+    y = "Average Estimate of the Mean") +
+  theme(legend.position = "none") + 
+  stat_summary(fun = "mean")
+
+rej_samples_p
 ```
 
