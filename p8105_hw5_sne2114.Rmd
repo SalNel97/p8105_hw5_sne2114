@@ -204,7 +204,9 @@ multi_means =
 multi_means
 ```
 
-Plotting
+Plotting the proportion of times a false null hypothesis was rejected (power) versus effect size.
+We can see that effect size is positively correlated with power. 
+We begin reaching the max power of 1 starting with an effect size of 4.
 
 ```{r}
 multi_means %>%
@@ -221,5 +223,24 @@ multi_means %>%
     y = "Power",
     color = "True Value of Mu: "
   )
+```
+
+plot
+
+```{r}
+all_samples_p = 
+  multi_means %>%
+   mutate(
+    multi_mu = str_c(" ", multi_mu)) %>%
+  ggplot(aes(x = multi_mu, y = estimate, fill = multi_mu)) +
+  geom_violin(alpha = .5) +
+  labs(
+    title = "All Samples",
+    x = "True Value of Mean",
+    y = "Average Estimate of the Mean") +
+  theme(legend.position = "none") + 
+  stat_summary(fun = "mean")
+
+all_samples_p
 ```
 
