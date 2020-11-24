@@ -204,3 +204,22 @@ multi_means =
 multi_means
 ```
 
+Plotting
+
+```{r}
+multi_means %>%
+  filter(p.value < 0.05) %>%
+  group_by(multi_mu) %>%
+  count() %>%
+  mutate(power = n/5000) %>%
+  ggplot(aes(x = multi_mu, y = power, color = multi_mu)) +
+  geom_point() +
+  geom_line() +
+  labs(
+    title = "Association between Power and Effect Size",
+    x = "True Value of Mu",
+    y = "Power",
+    color = "True Value of Mu: "
+  )
+```
+
