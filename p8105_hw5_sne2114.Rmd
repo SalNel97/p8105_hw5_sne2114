@@ -157,7 +157,7 @@ study_df %>%
       title = "Observations for each Subject Over Time",
       x = "Week",
       y = "Observations",
-      color = "Arm: ")
+      color = "Group: ")
 ```
 
 The experimental group has higher values for observations overall compared to the control group.
