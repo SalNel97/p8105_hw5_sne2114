@@ -256,7 +256,7 @@ rej_samples_p =
   ggplot(aes(x = multi_mu, y = estimate, fill = multi_mu)) +
   geom_violin(alpha = .5) +
   labs(
-    title = "Samples for which Null was Rejected",
+    title = "Null Rejected Samples",
     x = "True Value of Mean",
     y = "Sample Average of the Mean") +
   theme(legend.position = "none") + 
