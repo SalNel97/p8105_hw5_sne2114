@@ -9,6 +9,8 @@ editor_options:
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(rvest)
+library(plotly)
+library(patchwork)
 knitr::opts_chunk$set(
   fig.width = 6,
   fig.asp = .6,
@@ -238,11 +240,9 @@ all_samples_p =
   labs(
     title = "All Samples",
     x = "True Value of Mean",
-    y = "Average Estimate of the Mean") +
+    y = "Sample Average of the Mean") +
   theme(legend.position = "none") + 
   stat_summary(fun = "mean")
-
-all_samples_p
 ```
 
 Plotting the average estimate of means against the true mean values only for samples in which the null hypothesis was rejected (p-value < 0.05).
@@ -258,10 +258,16 @@ rej_samples_p =
   labs(
     title = "Samples for which Null was Rejected",
     x = "True Value of Mean",
-    y = "Average Estimate of the Mean") +
+    y = "Sample Average of the Mean") +
   theme(legend.position = "none") + 
   stat_summary(fun = "mean")
 
-rej_samples_p
+all_samples_p + rej_samples_p
 ```
 
+From these two plots we can see that the average mean estimate and true mean are positively correlated with one another.
+For all samples, the relationship between average mean estimate and true mean is almost perfectly linear (they basically equal each other at every point). 
+However, for only samples in which the null was rejected, we can see that the average mean estimate is larger than the true mean for mu = 1,2,3.
+Those two values seem to be equal at mu = 4,5,6 , on the other hand, probably due to many of the p-values generated at those mu's being smaller than 0.05.
+In other words, more samples will fulfill the criteria of rejecting the null hypothesis, reducing variation for the true mean.
+An interesting case is at mu = 0, where the average mean estimate and the true mean are also equal, but due to extreme values on both ends/variation (unlike in the plot for all samples).
